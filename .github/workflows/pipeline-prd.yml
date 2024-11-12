@@ -2,7 +2,7 @@ name: Pipeline-PRD
 
 on:
   push:
-    branches: [ "stage" ]
+    branches: [ "main" ]
 
 jobs:
   Integration:

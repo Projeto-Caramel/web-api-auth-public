@@ -48,33 +48,18 @@ jobs:
       with:
         name: publish-artifact
         path: ./publish
-    - name: Install jq
-      run: sudo apt-get install -y jq
-    - name: Substitute secrets in appsettings using jq
+    - name: App Settings Variable Substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: './publish/appsettings.Production.json'
       env:
-        CONNECTION_STRING_PRD: ${{ secrets.CONNECTION_STRING_PRD }}
-        ENCRYPTION_KEY_PRD: ${{ secrets.ENCRYPTION_KEY_PRD }}
-        JWT_KEY_PRD: ${{ secrets.JWT_KEY_PRD }}
-        JWT_ISSUER_PRD: ${{ secrets.JWT_ISSUER_PRD }}
-        EMAIL_ACCESS_KEY_PRD: ${{ secrets.EMAIL_ACCESS_KEY_PRD }}
-        EMAIL_SECRET_KEY_PRD: ${{ secrets.EMAIL_SECRET_KEY_PRD }}
-        AUTH_URL_PRD: ${{ secrets.AUTH_URL_PRD }}
-        BUCKET_ACCESS_KEY_PRD: ${{ secrets.BUCKET_ACCESS_KEY_PRD }}
-        BUCKET_SECRET_KEY_PRD: ${{ secrets.BUCKET_SECRET_KEY_PRD }}
-        BUCKET_NAME_PRD: ${{ secrets.BUCKET_NAME_PRD }}
-      run: |
-        jq '.MongoDBSettings.ConnectionString = env.CONNECTION_STRING_PRD |
-            .EncryptionKey = env.ENCRYPTION_KEY_PRD |
-            .Jwt.Key = env.JWT_KEY_PRD |
-            .Jwt.Issuer = env.JWT_ISSUER_PRD |
-            .EmailSettings.AccessKey = env.EMAIL_ACCESS_KEY_PRD |
-            .EmailSettings.SecretKey = env.EMAIL_SECRET_KEY_PRD |
-            .APIs.AuthUrl = env.AUTH_URL_PRD |
-            .BucketSettings.AccessKey = env.BUCKET_ACCESS_KEY_PRD |
-            .BucketSettings.SecretKey = env.BUCKET_SECRET_KEY_PRD |
-            .BucketSettings.BucketName = env.BUCKET_NAME_PRD' \
-            ./publish/appsettings.Production.json > ./publish/appsettings.Production.tmp.json && \
-        mv ./publish/appsettings.Production.tmp.json ./publish/appsettings.Production.json
+        MongoDBSettings.ConnectionString: ${{ secrets.CONNECTION_STRING_PRD }}
+        EncryptionKey: ${{ secrets.ENCRYPTION_KEY_PRD }}
+        Jwt.Key: ${{ secrets.JWT_KEY_PRD }}
+        Jwt.Issuer: ${{ secrets.JWT_ISSUER_PRD }}
+        EmailSettings.AccessKey: ${{ secrets.EMAIL_ACCESS_KEY_PRD }}
+        EmailSettings.SecretKey: ${{ secrets.EMAIL_SECRET_KEY_PRD }}
+        APIs.AuthUrl: ${{ secrets.AUTH_URL_PRD }}
     - name: Deploy to AWS Lambda
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PRD }}

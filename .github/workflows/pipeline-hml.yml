@@ -1,0 +1,71 @@
+name: Pipeline-HML
+
+on:
+  push:
+    branches: [ "stage" ]
+
+jobs:
+  Integration:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Publish
+      run: dotnet publish -c Release -o ./publish
+    - name: Upload Publish Directory as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: publish-artifact
+        path: ./publish
+
+  Deploy:
+
+    runs-on: ubuntu-latest
+    needs: Integration
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    - name: Install Lambda Tools
+      run: dotnet tool install -g Amazon.Lambda.Tools
+    - name: Download Publish Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: publish-artifact
+        path: ./publish
+    - name: App Settings Variable Substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: './publish/appsettings.Development.json'
+      env:
+        MongoDBSettings.ConnectionString: ${{ secrets.CONNECTION_STRING_HML }}
+        EncryptionKey: ${{ secrets.ENCRYPTION_KEY_HML }}
+        Jwt.Key: ${{ secrets.JWT_KEY_HML }}
+        Jwt.Issuer: ${{ secrets.JWT_ISSUER_HML }}
+        EmailSettings.AccessKey: ${{ secrets.EMAIL_ACCESS_KEY_HML }}
+        EmailSettings.SecretKey: ${{ secrets.EMAIL_SECRET_KEY_HML }}
+        APIs.AuthUrl: ${{ secrets.AUTH_URL_HML }}
+    - name: Deploy to AWS Lambda
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_HML }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_HML }}
+        AWS_REGION: ${{ secrets.AWS_REGION_HML }}
+      run: |
+        cd ./publish
+        zip -r function.zip .
+        aws lambda update-function-code --function-name ${{ secrets.LAMBDA_NAME_HML }} --zip-file fileb://function.zip

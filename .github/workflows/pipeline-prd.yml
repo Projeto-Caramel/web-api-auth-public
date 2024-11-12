@@ -42,7 +42,7 @@ jobs:
       run: dotnet publish -c Release -o ./publish
     - name: Substitute secrets in appsettings
       run: |
-        sed -i "s|SECRET-PRD|${{ secrets.CONNECTION_STRING_PRD }}|g" ./publish/appsettings.Development.json
+        sed -i "s|CONNECTION_STRING_PRD|${{ secrets.CONNECTION_STRING_PRD }}|g" ./publish/appsettings.Development.json
         sed -i "s|AUTH_URL_PRD|${{ secrets.AUTH_URL_PRD }}|g" ./publish/appsettings.Development.json
         sed -i "s|JWT_KEY_PRD|${{ secrets.JWT_KEY_PRD }}|g" ./publish/appsettings.Development.json
         sed -i "s|JWT_ISSUER_PRD|${{ secrets.JWT_ISSUER_PRD }}|g" ./publish/appsettings.Development.json

@@ -42,7 +42,7 @@ jobs:
       run: dotnet publish -c Release -o ./publish
     - name: Substitute secrets in appsettings
       run: |
-        sed -i "s|SECRET-HML|${{ secrets.CONNECTION_STRING_HML }}|g" ./publish/appsettings.Development.json
+        sed -i "s|CONNECTION_STRING_HML|${{ secrets.CONNECTION_STRING_HML }}|g" ./publish/appsettings.Development.json
         sed -i "s|AUTH_URL_HML|${{ secrets.AUTH_URL_HML }}|g" ./publish/appsettings.Development.json
         sed -i "s|JWT_KEY_HML|${{ secrets.JWT_KEY_HML }}|g" ./publish/appsettings.Development.json
         sed -i "s|JWT_ISSUER_HML|${{ secrets.JWT_ISSUER_HML }}|g" ./publish/appsettings.Development.json

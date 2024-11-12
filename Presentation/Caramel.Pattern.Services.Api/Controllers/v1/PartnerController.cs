@@ -62,12 +62,7 @@ namespace Caramel.Pattern.Services.Api.Controllers.v1
         {
             request.Password = _cipherService.Encrypt(request.Password);
 
-            //var result = await _service.ValidateLoginAsync(request.Email, request.Password);7
-            Partner result = new();
-            result.Id = ObjectId.GenerateNewId().ToString();
-            result.Role = Roles.Admin;
-            result.Name = "André";
-            result.ProfileImageUrl = "";
+            var result = await _service.ValidateLoginAsync(request.Email, request.Password);
 
             var token = _tokenService.GenerateJwtTokenAsync(result.Id, result.Name, result.Role, result.ProfileImageUrl);
 

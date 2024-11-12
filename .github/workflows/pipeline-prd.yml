@@ -50,7 +50,7 @@ jobs:
         path: ./publish
     - name: Substitute secrets in appsettings
       run: |
-        sed -i "s|CONNECTION_STRING_PRD|${{ secrets.CONNECTION_STRING_PRD }}|g" ./publish/appsettings.Production.json
+        sed -i "s|PLACEHOLDER_CONNECTION_STRING_PRD|${{ secrets.CONNECTION_STRING_PRD }}|g" ./publish/appsettings.Production.json
         sed -i "s|ENCRYPTION_KEY_PRD|${{ secrets.ENCRYPTION_KEY_PRD }}|g" ./publish/appsettings.Production.json
         sed -i "s|JWT_KEY_PRD|${{ secrets.JWT_KEY_PRD }}|g" ./publish/appsettings.Production.json
         sed -i "s|JWT_ISSUER_PRD|${{ secrets.JWT_ISSUER_PRD }}|g" ./publish/appsettings.Production.json

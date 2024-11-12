@@ -48,27 +48,18 @@ jobs:
       with:
         name: publish-artifact
         path: ./publish
-    - name: Install jq
-      run: sudo apt-get install -y jq
-    - name: Substitute secrets in appsettings using jq
+    - name: App Settings Variable Substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: './publish/appsettings.Development.json'
       env:
-        CONNECTION_STRING_HML: ${{ secrets.CONNECTION_STRING_HML }}
-        ENCRYPTION_KEY_HML: ${{ secrets.ENCRYPTION_KEY_HML }}
-        JWT_KEY_HML: ${{ secrets.JWT_KEY_HML }}
-        JWT_ISSUER_HML: ${{ secrets.JWT_ISSUER_HML }}
-        EMAIL_ACCESS_KEY_HML: ${{ secrets.EMAIL_ACCESS_KEY_HML }}
-        EMAIL_SECRET_KEY_HML: ${{ secrets.EMAIL_SECRET_KEY_HML }}
-        AUTH_URL_HML: ${{ secrets.AUTH_URL_HML }}
-      run: |
-        jq '.MongoDBSettings.ConnectionString = env.CONNECTION_STRING_HML |
-            .EncryptionKey = env.ENCRYPTION_KEY_HML |
-            .Jwt.Key = env.JWT_KEY_HML |
-            .Jwt.Issuer = env.JWT_ISSUER_HML |
-            .EmailSettings.AccessKey = env.EMAIL_ACCESS_KEY_HML |
-            .EmailSettings.SecretKey = env.EMAIL_SECRET_KEY_HML |
-            .APIs.AuthUrl = env.AUTH_URL_HML' \
-            ./publish/appsettings.Development.json > ./publish/appsettings.Development.tmp.json && \
-        mv ./publish/appsettings.Development.tmp.json ./publish/appsettings.Development.json
+        MongoDBSettings.ConnectionString: ${{ secrets.CONNECTION_STRING_HML }}
+        EncryptionKey: ${{ secrets.ENCRYPTION_KEY_HML }}
+        Jwt.Key: ${{ secrets.JWT_KEY_HML }}
+        Jwt.Issuer: ${{ secrets.JWT_ISSUER_HML }}
+        EmailSettings.AccessKey: ${{ secrets.EMAIL_ACCESS_KEY_HML }}
+        EmailSettings.SecretKey: ${{ secrets.EMAIL_SECRET_KEY_HML }}
+        APIs.AuthUrl: ${{ secrets.AUTH_URL_HML }}
     - name: Deploy to AWS Lambda
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_HML }}

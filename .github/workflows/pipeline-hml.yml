@@ -38,17 +38,17 @@ jobs:
         dotnet-version: '8.0.x'
     - name: Install Lambda Tools
       run: dotnet tool install -g Amazon.Lambda.Tools
-    - name: Substituir arquivos de configuração
-      run: |
-        sed -i 's/SECRET-HML/${{ secrets.CONNECTION_STRING_HML }}/g' ./publish/appsettings.Development.json
-        sed -i 's/SECRET-HML/${{ secrets.ENCRYPTION_KEY_HML }}/g' ./publish/appsettings.Development.json
-        sed -i 's/SECRET-HML/${{ secrets.JWT_KEY_HML }}/g' ./publish/appsettings.Development.json
-        sed -i 's/SECRET-HML/${{ secrets.JWT_ISSUER_HML }}/g' ./publish/appsettings.Development.json
-        sed -i 's/SECRET-HML/${{ secrets.EMAIL_ACCESS_KEY_HML }}/g' ./publish/appsettings.Development.json
-        sed -i 's/SECRET-HML/${{ secrets.EMAIL_SECRET_KEY_HML }}/g' ./publish/appsettings.Development.json
-        sed -i 's/SECRET-HML/${{ secrets.AUTH_URL_HML }}/g' ./publish/appsettings.Development.json
     - name: Publish .NET project
       run: dotnet publish -c Release -o ./publish
+    - name: Substitute secrets in appsettings
+      run: |
+        sed -i "s|SECRET-HML|${{ secrets.CONNECTION_STRING_HML }}|g" ./publish/appsettings.Development.json
+        sed -i "s|AUTH_URL_HML|${{ secrets.AUTH_URL_HML }}|g" ./publish/appsettings.Development.json
+        sed -i "s|JWT_KEY_HML|${{ secrets.JWT_KEY_HML }}|g" ./publish/appsettings.Development.json
+        sed -i "s|JWT_ISSUER_HML|${{ secrets.JWT_ISSUER_HML }}|g" ./publish/appsettings.Development.json
+        sed -i "s|EMAIL_ACCESS_KEY_HML|${{ secrets.EMAIL_ACCESS_KEY_HML }}|g" ./publish/appsettings.Development.json
+        sed -i "s|EMAIL_SECRET_KEY_HML|${{ secrets.EMAIL_SECRET_KEY_HML }}|g" ./publish/appsettings.Development.json
+        sed -i "s|ENCRYPTION_KEY_HML|${{ secrets.ENCRYPTION_KEY_HML }}|g" ./publish/appsettings.Development.json
     - name: Deploy to AWS Lambda
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_HML }}

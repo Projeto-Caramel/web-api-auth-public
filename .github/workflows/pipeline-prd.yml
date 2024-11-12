@@ -48,15 +48,33 @@ jobs:
       with:
         name: publish-artifact
         path: ./publish
-    - name: Substitute secrets in appsettings
+    - name: Install jq
+      run: sudo apt-get install -y jq
+    - name: Substitute secrets in appsettings using jq
+      env:
+        CONNECTION_STRING_PRD: ${{ secrets.CONNECTION_STRING_PRD }}
+        ENCRYPTION_KEY_PRD: ${{ secrets.ENCRYPTION_KEY_PRD }}
+        JWT_KEY_PRD: ${{ secrets.JWT_KEY_PRD }}
+        JWT_ISSUER_PRD: ${{ secrets.JWT_ISSUER_PRD }}
+        EMAIL_ACCESS_KEY_PRD: ${{ secrets.EMAIL_ACCESS_KEY_PRD }}
+        EMAIL_SECRET_KEY_PRD: ${{ secrets.EMAIL_SECRET_KEY_PRD }}
+        AUTH_URL_PRD: ${{ secrets.AUTH_URL_PRD }}
+        BUCKET_ACCESS_KEY_PRD: ${{ secrets.BUCKET_ACCESS_KEY_PRD }}
+        BUCKET_SECRET_KEY_PRD: ${{ secrets.BUCKET_SECRET_KEY_PRD }}
+        BUCKET_NAME_PRD: ${{ secrets.BUCKET_NAME_PRD }}
       run: |
-        sed -i "s|PLACEHOLDER_CONNECTION_STRING_PRD|${{ secrets.CONNECTION_STRING_PRD }}|g" ./publish/appsettings.Production.json
-        sed -i "s|ENCRYPTION_KEY_PRD|${{ secrets.ENCRYPTION_KEY_PRD }}|g" ./publish/appsettings.Production.json
-        sed -i "s|JWT_KEY_PRD|${{ secrets.JWT_KEY_PRD }}|g" ./publish/appsettings.Production.json
-        sed -i "s|JWT_ISSUER_PRD|${{ secrets.JWT_ISSUER_PRD }}|g" ./publish/appsettings.Production.json
-        sed -i "s|EMAIL_ACCESS_KEY_PRD|${{ secrets.EMAIL_ACCESS_KEY_PRD }}|g" ./publish/appsettings.Production.json
-        sed -i "s|EMAIL_SECRET_KEY_PRD|${{ secrets.EMAIL_SECRET_KEY_PRD }}|g" ./publish/appsettings.Production.json
-        sed -i "s|AUTH_URL_PRD|${{ secrets.AUTH_URL_PRD }}|g" ./publish/appsettings.Production.json
+        jq '.MongoDBSettings.ConnectionString = env.CONNECTION_STRING_PRD |
+            .EncryptionKey = env.ENCRYPTION_KEY_PRD |
+            .Jwt.Key = env.JWT_KEY_PRD |
+            .Jwt.Issuer = env.JWT_ISSUER_PRD |
+            .EmailSettings.AccessKey = env.EMAIL_ACCESS_KEY_PRD |
+            .EmailSettings.SecretKey = env.EMAIL_SECRET_KEY_PRD |
+            .APIs.AuthUrl = env.AUTH_URL_PRD |
+            .BucketSettings.AccessKey = env.BUCKET_ACCESS_KEY_PRD |
+            .BucketSettings.SecretKey = env.BUCKET_SECRET_KEY_PRD |
+            .BucketSettings.BucketName = env.BUCKET_NAME_PRD' \
+            ./publish/appsettings.Production.json > ./publish/appsettings.Production.tmp.json && \
+        mv ./publish/appsettings.Production.tmp.json ./publish/appsettings.Production.json
     - name: Deploy to AWS Lambda
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PRD }}

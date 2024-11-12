@@ -23,6 +23,11 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish
       run: dotnet publish -c Release -o ./publish
+    - name: Upload Publish Directory as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: publish-artifact
+        path: ./publish
 
   Deploy:
 
@@ -38,8 +43,11 @@ jobs:
         dotnet-version: '8.0.x'
     - name: Install Lambda Tools
       run: dotnet tool install -g Amazon.Lambda.Tools
-    - name: Publish .NET project
-      run: dotnet publish -c Release -o ./publish
+    - name: Download Publish Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: publish-artifact
+        path: ./publish
     - name: Substitute secrets in appsettings
       run: |
         sed -i "s|CONNECTION_STRING_HML|${{ secrets.CONNECTION_STRING_HML }}|g" ./publish/appsettings.Development.json

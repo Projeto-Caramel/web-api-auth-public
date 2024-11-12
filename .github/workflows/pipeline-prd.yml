@@ -23,6 +23,11 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Publish
       run: dotnet publish -c Release -o ./publish
+    - name: Upload Publish Directory as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: publish-artifact
+        path: ./publish
 
   Deploy:
 
@@ -38,17 +43,20 @@ jobs:
         dotnet-version: '8.0.x'
     - name: Install Lambda Tools
       run: dotnet tool install -g Amazon.Lambda.Tools
-    - name: Publish .NET project
-      run: dotnet publish -c Release -o ./publish
-   - name: Substitute secrets in appsettings
+    - name: Download Publish Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: publish-artifact
+        path: ./publish
+    - name: Substitute secrets in appsettings
       run: |
-        sed -i "s|CONNECTION_STRING_PRD|${{ secrets.CONNECTION_STRING_PRD }}|g" ./publish/appsettings.Development.json
-        sed -i "s|ENCRYPTION_KEY_PRD|${{ secrets.ENCRYPTION_KEY_PRD }}|g" ./publish/appsettings.Development.json
-        sed -i "s|JWT_KEY_PRD|${{ secrets.JWT_KEY_PRD }}|g" ./publish/appsettings.Development.json
-        sed -i "s|JWT_ISSUER_PRD|${{ secrets.JWT_ISSUER_PRD }}|g" ./publish/appsettings.Development.json
-        sed -i "s|EMAIL_ACCESS_KEY_PRD|${{ secrets.EMAIL_ACCESS_KEY_PRD }}|g" ./publish/appsettings.Development.json
-        sed -i "s|EMAIL_SECRET_KEY_PRD|${{ secrets.EMAIL_SECRET_KEY_PRD }}|g" ./publish/appsettings.Development.json
-        sed -i "s|AUTH_URL_PRD|${{ secrets.AUTH_URL_PRD }}|g" ./publish/appsettings.Development.json
+        sed -i "s|CONNECTION_STRING_PRD|${{ secrets.CONNECTION_STRING_PRD }}|g" ./publish/appsettings.Production.json
+        sed -i "s|ENCRYPTION_KEY_PRD|${{ secrets.ENCRYPTION_KEY_PRD }}|g" ./publish/appsettings.Production.json
+        sed -i "s|JWT_KEY_PRD|${{ secrets.JWT_KEY_PRD }}|g" ./publish/appsettings.Production.json
+        sed -i "s|JWT_ISSUER_PRD|${{ secrets.JWT_ISSUER_PRD }}|g" ./publish/appsettings.Production.json
+        sed -i "s|EMAIL_ACCESS_KEY_PRD|${{ secrets.EMAIL_ACCESS_KEY_PRD }}|g" ./publish/appsettings.Production.json
+        sed -i "s|EMAIL_SECRET_KEY_PRD|${{ secrets.EMAIL_SECRET_KEY_PRD }}|g" ./publish/appsettings.Production.json
+        sed -i "s|AUTH_URL_PRD|${{ secrets.AUTH_URL_PRD }}|g" ./publish/appsettings.Production.json
     - name: Deploy to AWS Lambda
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_PRD }}

@@ -123,7 +123,7 @@ namespace Caramel.Pattern.Services.Application.Services.Adopters
 
             var email = EmailTemplateHelper.GetAdoptionConfirmationEmail(partner, adopterInfos, petInfos);
 
-            await _emailSender.SendEmailAsync(partner.Email, email, "Caramel - Novo Interessado!");
+            await _emailSender.SendEmailAsync(partner.Email, email, "Caramel - Novo Interessado!", adopterInfos.Email);
         }
 
         private void ValidateEmailPolicy(string email)

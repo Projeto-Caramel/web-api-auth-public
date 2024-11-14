@@ -24,14 +24,14 @@ namespace Caramel.Services.Pattern.Tests.Application.Adopters
             var unitOfWorkMock = new Mock<IUnitOfWork>();
 
             partnerServiceMock.Setup(x => x.GetAdopterByEmailAsync(It.IsAny<string>())).ReturnsAsync(AdopterData.Data["Basic"]);
-            emailSenderMock.Setup(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).Verifiable();
+            emailSenderMock.Setup(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), null)).Verifiable();
             unitOfWorkMock.Setup(x => x.AdoptersVerificationCodes.AddAsync(It.IsAny<AdopterVerificationCode>())).Verifiable();
 
             var service = new AdoptersVerificationCodeService(unitOfWorkMock.Object, emailSenderMock.Object, partnerServiceMock.Object);
 
             await service.SendConfirmation("test@basic.com");
 
-            emailSenderMock.Verify(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            emailSenderMock.Verify(x => x.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), null), Times.Once);
             unitOfWorkMock.Verify(x => x.AdoptersVerificationCodes.AddAsync(It.IsAny<AdopterVerificationCode>()), Times.Once);
 
         }

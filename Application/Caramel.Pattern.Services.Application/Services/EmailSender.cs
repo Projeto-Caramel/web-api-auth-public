@@ -26,7 +26,7 @@ namespace Caramel.Pattern.Services.Application.Services
                 region: RegionEndpoint.SAEast1);
         }
 
-        public async Task SendEmailAsync(string receiver, string body, string subject)
+        public async Task SendEmailAsync(string receiver, string body, string subject, string cc = null)
         {
             try
             {
@@ -35,7 +35,8 @@ namespace Caramel.Pattern.Services.Application.Services
                     {
                         Destination = new Destination
                         {
-                            ToAddresses = new List<string> { receiver },
+                            ToAddresses = new() { receiver },
+                            CcAddresses = cc is null ? null : new() { receiver },
                         },
                         Message = new Message
                         {

@@ -20,6 +20,12 @@ namespace Caramel.Pattern.Services.Application.Services.Helpers
                             <p>Por favor, redefinir a senha após o seu primeiro acesso.</p>
                             <p>Obrigado!</p>
                             <p>Equipe Caramel!</p>
+
+                            <p><small>Contato: projetocaramel@gmail.com.br</small></p>
+                            <p><small>Website para Ongs: <a href=""https://www.projetocaramel.com.br"">www.projetocaramel.com.br</a></small></p>
+                            <p><small>Para mais informações, consulte nossos Termos e Condições</a>.</small></p>
+                            <p><small>ID: {Guid.NewGuid().ToString()}</small></p>
+                            <p><small>Data: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}</small></p
                         </body>
                         </html>
                     ";
@@ -37,6 +43,12 @@ namespace Caramel.Pattern.Services.Application.Services.Helpers
                             <p>Por favor, utilize este código para concluir o processo de autenticação.</p>
                             <p>Obrigado!</p>
                             <p>Equipe Caramel!</p>
+
+                            <p><small>Contato: projetocaramel@gmail.com.br</small></p>
+                            <p><small>Website para Ongs: <a href=""https://www.projetocaramel.com.br"">www.projetocaramel.com.br</a></small></p>
+                            <p><small>Para mais informações, consulte nossos Termos e Condições</a>.</small></p>
+                            <p><small>ID: {Guid.NewGuid().ToString()}</small></p>
+                            <p><small>Data: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}</small></p
                         </body>
                         </html>
                     ";
@@ -117,10 +129,15 @@ namespace Caramel.Pattern.Services.Application.Services.Helpers
                     <p>Por favor, entre em contato com o(a) possível adotante para sanar qualquer dúvida ou para prosseguir com a adoção!</p>
                     <p>Obrigado!</p>
                     <p>Equipe Caramel!</p>
+
+                    <p><small>Contato: projetocaramel@gmail.com.br</small></p>
+                    <p><small>Website para Ongs: <a href=""https://www.projetocaramel.com.br"">www.projetocaramel.com.br</a></small></p>
+                    <p><small>Para mais informações, consulte nossos Termos e Condições</a>.</small></p>
+                    <p><small>ID: {Guid.NewGuid().ToString()}</small></p>
+                    <p><small>Data: {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")}</small></p>
                 </body>
                 </html>
             ";
         }
-
     }
 }

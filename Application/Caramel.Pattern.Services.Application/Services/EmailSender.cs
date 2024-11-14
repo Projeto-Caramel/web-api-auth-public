@@ -54,7 +54,7 @@ namespace Caramel.Pattern.Services.Application.Services
                             }
                         },
 
-                        Source = "contato@projetocaramel.com.br"
+                        Source = "equipecaramel@projetocaramel.com.br"
                     });
             }
             catch (Exception error)
@@ -64,5 +64,4 @@ namespace Caramel.Pattern.Services.Application.Services
         }
 
     }
-
 }

@@ -5,6 +5,14 @@ namespace Caramel.Pattern.Services.Domain.Entities.DTOs.Request.Adopters
     [ExcludeFromCodeCoverage]
     public class AdopterUpdatePasswordRequest
     {
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public string NewPassword { get; set; }
+    }
+
+    [ExcludeFromCodeCoverage]
+    public class AdopterResetPasswordRequest
+    {
         public string Email { get; set; }
         public string NewPassword { get; set; }
     }

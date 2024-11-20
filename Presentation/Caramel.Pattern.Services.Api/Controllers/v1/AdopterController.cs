@@ -187,7 +187,7 @@ namespace Caramel.Pattern.Services.Api.Controllers.v1
         [HttpPut("/auth/adopter/password/reset")]
         [ProducesResponseType(typeof(CustomVerificationCodeResponse<TokenModel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public async Task<IActionResult> ResetPassword(AdopterUpdatePasswordRequest request)
+        public async Task<IActionResult> ResetPassword(AdopterResetPasswordRequest request)
         {
             request.NewPassword = _cipherService.Encrypt(request.NewPassword);
 

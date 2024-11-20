@@ -36,7 +36,7 @@ namespace Caramel.Pattern.Services.Application.Services
                         Destination = new Destination
                         {
                             ToAddresses = new() { receiver },
-                            CcAddresses = cc is null ? null : new() { receiver },
+                            CcAddresses = cc is null ? null : new() { cc },
                         },
                         Message = new Message
                         {

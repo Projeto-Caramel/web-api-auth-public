@@ -56,6 +56,13 @@ namespace Caramel.Pattern.Services.Application.Services.Adopters
                 entity.ValidTo = DateTime.Now.AddMinutes(10);
 
                 _unitOfWork.AdoptersVerificationCodes.Update(entity);
+
+                await _emailSender.SendEmailAsync(
+                    email,
+                    EmailTemplateHelper.GetTemporaryConfirmationCode(code),
+                    "Código de Autenticação");
+
+                return;
             }
         }
 

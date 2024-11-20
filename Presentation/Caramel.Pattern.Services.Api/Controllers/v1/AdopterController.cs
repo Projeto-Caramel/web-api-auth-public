@@ -73,7 +73,7 @@ namespace Caramel.Pattern.Services.Api.Controllers.v1
         }
 
         /// <summary>
-        /// Envia código de Autenticação para o email do Parceiro cadastrado
+        /// Envia código de Autenticação para o email do Adotante
         /// </summary>
         /// <param name="email">Email do Parceiro cadastrado</param>
         /// <returns>Custom Email Response</returns>
@@ -81,6 +81,25 @@ namespace Caramel.Pattern.Services.Api.Controllers.v1
         [ProducesResponseType(typeof(CustomEmailResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> SendVerificationCodeEmail(string email)
         {
+            await _adoptersVerificationCodeService.SendConfirmation(email);
+
+            return Ok(new CustomAdoptersEmailResponse(email, StatusProcess.Success));
+        }
+
+        /// <summary>
+        /// Envia código de Autenticação para o email do Adotante cadastrado
+        /// </summary>
+        /// <param name="email">Email do Parceiro cadastrado</param>
+        /// <returns>Custom Email Response</returns>
+        [HttpPost("/auth/adopter/verification/reset")]
+        [ProducesResponseType(typeof(CustomEmailResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> SendVerificationCodeEmailResetPassword(string email)
+        {
+            _ = await _adoptersApiService.GetAdopterByEmailAsync(email) ??
+                throw new BusinessException("Email Inválido, verifique e tente novamente!",
+                    StatusProcess.InvalidRequest,
+                    HttpStatusCode.NotFound);
+
             await _adoptersVerificationCodeService.SendConfirmation(email);
 
             return Ok(new CustomAdoptersEmailResponse(email, StatusProcess.Success));

@@ -178,5 +178,27 @@ namespace Caramel.Pattern.Services.Api.Controllers.v1
 
             return Ok(new CustomUpdateResponse<Adopter>(adopter, StatusProcess.Success));
         }
+
+        /// <summary>
+        /// Redefine a senha de um usuário no Banco de dados
+        /// </summary>
+        /// <param name="request">ID e nova senha</param>
+        /// <returns>Dados do usuáro atualizados</returns>
+        [HttpPut("/auth/adopter/password/reset")]
+        [ProducesResponseType(typeof(CustomVerificationCodeResponse<TokenModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> ResetPassword(AdopterResetPasswordRequest request)
+        {
+            request.NewPassword = _cipherService.Encrypt(request.NewPassword);
+
+            var user = await _adoptersApiService.GetAdopterByEmailAsync(request.Email) ??
+               throw new BusinessException("Email Inválido, verifique e tente novamente!",
+                   StatusProcess.InvalidRequest,
+                   HttpStatusCode.NotFound);
+
+            var adopter = await _service.UpdatePasswordAsync(user.Id, request.NewPassword);
+
+            return Ok(new CustomUpdateResponse<Adopter>(adopter, StatusProcess.Success));
+        }
     }
 }

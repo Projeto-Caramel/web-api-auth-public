@@ -108,7 +108,7 @@ namespace Caramel.Pattern.Services.Api.Controllers.v1
         /// <summary>
         /// Valida o código inserido pelo usuário
         /// </summary>
-        /// <param name="userId">Email do Usuário</param>
+        /// <param name="email">Email do Usuário</param>
         /// <param name="code">Código inserido</param>
         /// <returns>Custom Verification Code Response de uma Token Model</returns>
         [HttpPost("/auth/adopter/verification/validate")]
@@ -129,7 +129,7 @@ namespace Caramel.Pattern.Services.Api.Controllers.v1
         /// <returns>Custom Email Response</returns>
         [HttpPost("/auth/adopter/interest/email")]
         [ProducesResponseType(typeof(CustomEmailResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> SendVerificationCodeEmail(AdopterSendInterestRequest request)
+        public async Task<IActionResult> SendInterestEmail(AdopterSendInterestRequest request)
         {
             await _service.SendInterestEmailAsync(request.AdopterInfos, request.PetInfos, request.PartnerId);
 
@@ -175,6 +175,28 @@ namespace Caramel.Pattern.Services.Api.Controllers.v1
             request.NewPassword = _cipherService.Encrypt(request.NewPassword);
 
             var adopter = await _service.UpdatePasswordAsync(request.Id, request.NewPassword);
+
+            return Ok(new CustomUpdateResponse<Adopter>(adopter, StatusProcess.Success));
+        }
+
+        /// <summary>
+        /// Redefine a senha de um usuário no Banco de dados
+        /// </summary>
+        /// <param name="request">ID e nova senha</param>
+        /// <returns>Dados do usuáro atualizados</returns>
+        [HttpPut("/auth/adopter/password/reset")]
+        [ProducesResponseType(typeof(CustomVerificationCodeResponse<TokenModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> ResetPassword(AdopterResetPasswordRequest request)
+        {
+            request.NewPassword = _cipherService.Encrypt(request.NewPassword);
+
+            var user = await _adoptersApiService.GetAdopterByEmailAsync(request.Email) ??
+               throw new BusinessException("Email Inválido, verifique e tente novamente!",
+                   StatusProcess.InvalidRequest,
+                   HttpStatusCode.NotFound);
+
+            var adopter = await _service.UpdatePasswordAsync(user.Id, request.NewPassword);
 
             return Ok(new CustomUpdateResponse<Adopter>(adopter, StatusProcess.Success));
         }

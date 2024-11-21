@@ -24,6 +24,7 @@ namespace Caramel.Pattern.Services.Domain.Entities.DTOs.Request.Adopters
         public HasChildren HasChildren { get; set; }
         public FinancialSituation FinancialSituation { get; set; }
         public FreeTime FreeTime { get; set; }
+        public string Reason { get; set; } = string.Empty;
     }
 
     public class PetInfos

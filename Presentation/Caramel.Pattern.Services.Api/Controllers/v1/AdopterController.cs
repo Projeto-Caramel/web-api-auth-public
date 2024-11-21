@@ -108,7 +108,7 @@ namespace Caramel.Pattern.Services.Api.Controllers.v1
         /// <summary>
         /// Valida o código inserido pelo usuário
         /// </summary>
-        /// <param name="userId">Email do Usuário</param>
+        /// <param name="email">Email do Usuário</param>
         /// <param name="code">Código inserido</param>
         /// <returns>Custom Verification Code Response de uma Token Model</returns>
         [HttpPost("/auth/adopter/verification/validate")]
@@ -129,7 +129,7 @@ namespace Caramel.Pattern.Services.Api.Controllers.v1
         /// <returns>Custom Email Response</returns>
         [HttpPost("/auth/adopter/interest/email")]
         [ProducesResponseType(typeof(CustomEmailResponse), StatusCodes.Status200OK)]
-        public async Task<IActionResult> SendVerificationCodeEmail(AdopterSendInterestRequest request)
+        public async Task<IActionResult> SendInterestEmail(AdopterSendInterestRequest request)
         {
             await _service.SendInterestEmailAsync(request.AdopterInfos, request.PetInfos, request.PartnerId);
 

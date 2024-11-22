@@ -103,7 +103,7 @@ namespace Caramel.Pattern.Services.Application.Services.Helpers
                         <p><strong>Nome:</strong> <span class='highlight'>{adopter.Name}</span></p>
                         <p><strong>Email:</strong> <span class='highlight'>{adopter.Email}</span></p>
                         <p><strong>Telefone para Contato:</strong> <span class='highlight'>{adopter.AdopterPhone}</span></p>
-                        <p><strong>Data de Nascimento:</strong> <span class='highlight'>{adopter.Birthday:d}</span></p>
+                        <p><strong>Data de Nascimento:</strong> <span class='highlight'>{adopter.Birthday.ToString("dd/MM/yyyy")}</span></p>
                         <p><strong>Tipo de Residência:</strong> <span class='highlight'>{adopter.ResidencyType.GetDescription()}</span></p>
                         <p><strong>Estilo de Vida:</strong> <span class='highlight'>{adopter.Lifestyle.GetDescription()}</span></p>
                         <p><strong>Experiência com Pets:</strong> <span class='highlight'>{adopter.PetExperience.GetDescription()}</span></p>
